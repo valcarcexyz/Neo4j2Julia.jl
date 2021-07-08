@@ -1,11 +1,13 @@
 module Neo4j2Julia
-    include("Neo4jconnection.jl")
-    include("jolt_parsing.jl")
+    include("jolt/Neo4jconnection.jl")
+    include("jolt/jolt_parsing.jl")
+    include("plotting/plot.jl")
 
     using MetaGraphs
     using LightGraphs
 
     export create_graph
+    export plot
 
     """
         create_graph(...)

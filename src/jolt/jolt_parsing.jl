@@ -47,7 +47,6 @@ function updateNode!(g::MetaDiGraph, newProperties;
 end
 
 
-
 """
 Creates a edge given a graph g and the nodes u and v, 
 both expressed by one of the following ways:
@@ -80,8 +79,9 @@ end
 
 
 function jolt_parse(g::MetaDiGraph, splitted::Vector)
+    idx1, idx2 = 1, 2
     for line in splitted
-        try
+        if line != ""
             parsed = JSON.parse(line)
             if "data" in keys(parsed) # other will be headers and commits
                 response = parsed["data"]
@@ -122,18 +122,28 @@ function jolt_parse(g::MetaDiGraph, splitted::Vector)
                             # ]}           
                         delete!(entity[5], "id") # just to make sure there won't be problems
 
-                        idx1 = g[string(entity[2]), :id]
-                        idx2 = g[string(entity[4]), :id]
-
-                        if isa(idx1, Integer) & isa(idx1, Integer)
-                            add_edge!(g, idx1, idx2)
-                            delete!(auxEntity[5], "id")
-                            set_props!(g, Edge(idx1, idx2), Dict(
-                                :type => string(auxEntity[3]),
-                                :id => string(auxEntity[1]),
-                                [Symbol(k) =>  v for (k, v) in auxEntity[5]]...
-                            ))
+                        idx1 = try
+                            g[string(entity[2]), :id]
+                        catch err 
+                            createNode!(g, Dict(:id => entity[2]), :id)
+                            nv(g)
                         end
+
+                        idx2 = try
+                            g[string(entity[4]), :id]
+                        catch err 
+                            createNode!(g, Dict(:id => entity[4]), :id)
+                            nv(g)
+                        end
+
+                        createEdge!(g; 
+                            idxNodeU = idx1, 
+                            idxNodeV = idx2,
+                            properties = Dict(
+                                :type => string(entity[3]),
+                                :rel_id => string(entity[1]),
+                                [Symbol(k) =>  v for (k, v) in entity[5]]...
+                        ))
 
                     elseif entityType == "<-"
                         #  {"->": 
@@ -144,22 +154,32 @@ function jolt_parse(g::MetaDiGraph, splitted::Vector)
                             # ]}        
                         delete!(entity[5], "id") # just to make sure there won't be problems   
 
-                        idx2 = g[string(entity[2]), :id]
-                        idx1 = g[string(entity[4]), :id]
-
-                        if isa(idx1, Integer) & isa(idx1, Integer)
-                            add_edge!(g, idx1, idx2)
-                            delete!(auxEntity[5], "id")
-                            set_props!(g, Edge(idx1, idx2), Dict(
-                                :type => string(auxEntity[3]),
-                                :id => string(auxEntity[1]),
-                                [Symbol(k) =>  v for (k, v) in auxEntity[5]]...
-                            ))
+                        idx2 = try
+                            g[string(entity[2]), :id]
+                        catch err 
+                            createNode!(g, Dict(:id => entity[2]), :id)
+                            nv(g)
                         end
+
+                        idx1 = try
+                            g[string(entity[4]), :id]
+                        catch err 
+                            createNode!(g, Dict(:id => entity[4]), :id)
+                            nv(g)
+                        end
+                        
+                        createEdge!(g; 
+                            idxNodeU = idx1, 
+                            idxNodeV = idx2,
+                            properties = Dict(
+                                :type => string(entity[3]),
+                                :rel_id => string(entity[1]),
+                                [Symbol(k) =>  v for (k, v) in entity[5]]...
+                        ))
                     end
                 end
             end
-        catch err
+        # catch err
         end
     end
     return g
