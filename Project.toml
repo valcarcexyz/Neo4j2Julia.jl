@@ -3,6 +3,14 @@ uuid = "c1d020ba-81fb-4951-b3c3-6bc459597b13"
 authors = ["Diego Valcarce <dvalcarcer@gmail.com> and contributors"]
 version = "0.1.0"
 
+[deps]
+Compose = "a81c6b42-2e10-5240-aca2-a61377ecd94b"
+GraphPlot = "a2cc645c-3eea-5389-862e-a155d0052231"
+HTTP = "cd3eb016-35fb-5094-929b-558a96fad6f3"
+JSON = "682c06a0-de6a-54ab-a142-c8b1cf79cde6"
+LightGraphs = "093fc24a-ae57-5d10-9952-331d41423f4d"
+MetaGraphs = "626554b9-1ddb-594c-aa3c-2596fe9399a5"
+
 [compat]
 julia = "1"
 
