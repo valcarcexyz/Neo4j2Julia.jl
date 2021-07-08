@@ -1,10 +1,11 @@
 module Neo4j2Julia
-    using MetaGraphs: MetaDict
-using MetaGraphs
+    include("Neo4jconnection.jl")
+    include("jolt_parsing.jl")
+
+    using MetaGraphs
     using LightGraphs
 
-    include("Neo4jconnection.jl")
-
+    export create_graph
 
     """
         create_graph(...)
@@ -28,7 +29,7 @@ using MetaGraphs
         usr::String = "neo4j", 
         passw::String = "neo4j", 
         URI::String = "localhost", 
-        port::String = "7474", 
+        port::String = "7474",
         query::String = "MATCH (n) OPTIONAL MATCH (n)-[r]-() RETURN n, r;")
 
     # Check whether the database is accesible or not
@@ -40,13 +41,6 @@ using MetaGraphs
     g = MetaDiGraph()
     set_indexing_prop!(g, :id) # the "database" indexes by the id property
 
-    
-
-
-
-
-
-
-
+    jolt_parse(g, splitted_response)
     end
 end
