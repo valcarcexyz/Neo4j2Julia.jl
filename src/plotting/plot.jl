@@ -89,7 +89,7 @@ function plot(
     edgeColor::Union{RGB, Symbol} = colorant"lightgray",
     edgeWidth::Real = 1,
     
-    # Paleta de colores 
+    # Color pallete 
     pallete::AbstractVector=distinguishable_colors(1),
     
     # Layout configuration
