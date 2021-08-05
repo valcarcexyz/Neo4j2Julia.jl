@@ -83,6 +83,7 @@ function jolt_parse(g::MetaDiGraph, splitted::Vector)
     for line in splitted
         if line != ""
             parsed = JSON.parse(line)
+            try 
             if "data" in keys(parsed) # other will be headers and commits
                 response = parsed["data"]
                 # the response will be a bunch of entities 
@@ -179,7 +180,8 @@ function jolt_parse(g::MetaDiGraph, splitted::Vector)
                     end
                 end
             end
-        # catch err
+        catch err
+        end
         end
     end
     return g
