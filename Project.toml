@@ -16,6 +16,7 @@ MetaGraphs = "626554b9-1ddb-594c-aa3c-2596fe9399a5"
 Plots = "91a5bcdd-55d7-5caf-9e0b-520d859cae80"
 
 [compat]
+HTTP = "0.9"
 julia = "1"
 
 [extras]
